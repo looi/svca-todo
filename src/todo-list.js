@@ -42,26 +42,48 @@ export class TodoList extends LitElement {
     const els = repeat(todo_indices, (i) => i, (i) => {
       const x = todos[i];
       return html`
-        <li>
-          <input type=checkbox .checked=${x.done} @input=${e => this.updTodo(i, 'done', e.target.checked)}>
-          <input .value=${x.text} @input=${e => this.updTodo(i, 'text', e.target.value)}>
-          <button @click=${() => this.delTodo(i)}>${LANG_TABLE[lang].delete}</a>
+        <div class="input-group mb-3">
+          <div class="input-group-text">
+            <input class="form-check-input mt-0" type=checkbox .checked=${x.done} @input=${e => this.updTodo(i, 'done', e.target.checked)}>
+          </div>
+          <input class="form-control" .value=${x.text} @input=${e => this.updTodo(i, 'text', e.target.value)}>
+          <button class="btn btn-danger" @click=${() => this.delTodo(i)}>${LANG_TABLE[lang].delete}</a>
         </li>
       `;
     });
     return html`
-      <h1>${LANG_TABLE[lang].title}</h1>
-      <p>
-      ${LANG_TABLE[lang].language}:
-      <label><input type=radio name=lang .checked=${lang == 'zh'} @input=${e => this.setLang('zh')}>中文</label>
-      <label><input type=radio name=lang .checked=${lang == 'en'} @input=${e => this.setLang('en')}>English</label>
-      </p>
-      <button @click=${this.addTodo}> ${LANG_TABLE[lang].add}</button>
-      <button @click=${this.delAll}> ${LANG_TABLE[lang].delete_all}</button>
-      <label><input type=checkbox .checked=${this.state.hide_done} @input=${e => this.setHideDone(e.target.checked)}>${LANG_TABLE[lang].hide_done}</label>
-      <ol>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+      <nav class="navbar bg-primary" data-bs-theme="dark">
+        <div class="container-fluid">
+          <span class="navbar-brand mb-0 h1">${LANG_TABLE[lang].title}</span>
+        </div>
+      </nav>
+      <div class="input-group mb-3">
+        <span class="input-group-text">
+          ${LANG_TABLE[lang].language}
+        </span>
+        <span class="input-group-text">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" id="radio-lang-zh" type=radio name=lang .checked=${lang == 'zh'} @input=${e => this.setLang('zh')}>
+            <label class="form-check-label" for="radio-lang-zh">中文</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" id="radio-lang-en" type=radio name=lang .checked=${lang == 'en'} @input=${e => this.setLang('en')}>
+            <label class="form-check-label" for="radio-lang-en">English</label>
+          </div>
+        </span>
+      </div>
+      <div class="input-group mb-3">
+        <button class="btn btn-outline-primary" @click=${this.addTodo}> ${LANG_TABLE[lang].add}</button>
+        <button class="btn btn-outline-primary" @click=${this.delAll}> ${LANG_TABLE[lang].delete_all}</button>
+        <span class="input-group-text">
+          <div class="form-check form-switch">
+            <input class="form-check-input" id="check-hide" type=checkbox .checked=${this.state.hide_done} @input=${e => this.setHideDone(e.target.checked)}>
+            <label class="form-check-label" for="check-hide">${LANG_TABLE[lang].hide_done}</label>
+          </div>
+        </span>
+      </div>
       ${els}
-      </ol>
       <p>${LANG_TABLE[lang].raw_data}: ${JSON.stringify(this.state)}</p>
     `
   }
